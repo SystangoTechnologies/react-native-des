@@ -1,12 +1,14 @@
+/*
+* (The MIT License)
+* Copyright (c) 2015-2016 YunJiang.Fang <42550564@qq.com>
+* @providesModule Des
+* @flow-weak
+*/
 'use strict';
 
-const ENABLE = true;
-const ReactNative = require('react-native');
-const {
-    NativeModules,
-} = ReactNative;
+var React = require('react-native');
+var {
+    NativeModules
+} = React;
 
-module.exports = ENABLE ? NativeModules.Des : {
-    encrypt: (text, key, callback) => callback(text),
-    decrypt: (code, key, callback) => callback(code),
-};
+module.exports = NativeModules.Des;

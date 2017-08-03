@@ -1,5 +1,6 @@
 package com.remobile.des;
 
+import android.util.Base64;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -11,9 +12,6 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
-
-import Decoder.BASE64Decoder;
-import Decoder.BASE64Encoder;
 
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -36,27 +34,18 @@ public class RCTDes extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void encrypt(String data, String key, Callback success, Callback error) {
-        try {
-            byte[] bt = encrypt(data.getBytes(), key.getBytes());
-            String strs = new BASE64Encoder().encode(bt);
-            success.invoke(strs);
-        } catch (Exception e) {
-            error.invoke(e.getMessage());
-        }
+    public void encrypt(String data, String key, Callback callback) throws Exception {
+        byte[] bt = encrypt(data.getBytes(), key.getBytes());
+        String strs = Base64.encodeToString(bt, Base64.DEFAULT);
+        callback.invoke(strs);
     }
 
     @ReactMethod
-    public void decrypt(String data, String key, Callback success, Callback error) {
-        try {
-            BASE64Decoder decoder = new BASE64Decoder();
-            byte[] buf = decoder.decodeBuffer(data);
-            byte[] bt = decrypt(buf,key.getBytes());
-            String strs = new String(bt);
-            success.invoke(strs);
-        } catch (Exception e) {
-            error.invoke(e.getMessage());
-        }
+    public void decrypt(String data, String key, Callback callback) throws IOException, Exception {
+        byte[] buf = Base64.decode(data, Base64.DEFAULT);
+        byte[] bt = decrypt(buf,key.getBytes());
+        String strs = new String(bt);
+        callback.invoke(strs);
     }
 
     /**
